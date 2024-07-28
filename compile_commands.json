@@ -1,18 +1,18 @@
 [
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/clang",
       "-c",
       "-Wall",
-      "-std=c99",
+      "-std=c++20",
       "-I./libs/",
       "-I/usr/local/include",
       "-o",
       "renderer",
-      "./src/main.c"
+      "./src/main.cpp"
     ],
     "directory": "/Users/ramtinj/workspace/3DSoftwareRendering",
-    "file": "/Users/ramtinj/workspace/3DSoftwareRendering/src/main.c",
+    "file": "/Users/ramtinj/workspace/3DSoftwareRendering/src/main.cpp",
     "output": "/Users/ramtinj/workspace/3DSoftwareRendering/renderer"
   }
 ]

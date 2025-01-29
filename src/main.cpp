@@ -34,8 +34,8 @@ int initialize_window(void)
     fprintf(stderr, "Error initializing SDL.\n");
     return false;
   }
-  window = SDL_CreateWindow("SFML", SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+  window = SDL_CreateWindow("SFML", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
+                            WINDOW_HEIGHT, 0);
   if (!window)
   {
     fprintf(stderr, "Error creating SDL Window.\n");

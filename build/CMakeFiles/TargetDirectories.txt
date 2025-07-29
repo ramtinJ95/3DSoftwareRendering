@@ -1,0 +1,3 @@
+/Users/ramtinjavanmardi/workspace/3DSoftwareRendering/build/CMakeFiles/main.dir
+/Users/ramtinjavanmardi/workspace/3DSoftwareRendering/build/CMakeFiles/edit_cache.dir
+/Users/ramtinjavanmardi/workspace/3DSoftwareRendering/build/CMakeFiles/rebuild_cache.dir

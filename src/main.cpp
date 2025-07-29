@@ -1,33 +1,34 @@
 #include <SDL2/SDL.h>
-#include <SDL_video.h>
-#include <iostream>
-#include <stdio.h>
 
-bool is_running = false;
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        printf("\nThere is a error:%s\n",SDL_GetError());
+    }
+    SDL_Window* window;
+    window=SDL_CreateWindow("text", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, SDL_WINDOW_SHOWN);
+    if(window == NULL){
+        printf("\nerror is %s\n",SDL_GetError());
+    }
+    SDL_Surface *surface = SDL_GetWindowSurface(window);
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 0xFF, 0xFF, 0xFF, 1));
+    SDL_UpdateWindowSurface(window);
 
-bool initialize_window(void){
-  if(SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    std::cerr << "Error setting up SDL. \n";
-    return false;
-  }
+    // don't do this
+    //SDL_Delay(10000);
 
-  window = SDL_CreateWindow("SFML", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_BORDERLESS);
-  if(!window) {
-    std::cerr << "Error setting up SDL Window";
-    return false;
-  }
-  
-  renderer = SDL_CreateRenderer(window, -1, 0);
-   if(!renderer) {
-    std::cerr << "Error setting up SDL renderer";
-    return false;
-  }
-  return true;
-}
+    // try this instead...
+    SDL_bool quit = SDL_FALSE;
+    while (!quit) {
+       SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = SDL_TRUE;
+            }
+         }
+    }
 
-int main(void) {
-  is_running = initialize_window();
-  return 0;
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }

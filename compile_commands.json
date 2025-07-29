@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/Users/ramjav/workspace/3DSoftwareRendering/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DIMGDIR=\\\"../img/\\\" -I/Users/ramjav/workspace/3DSoftwareRendering/../include -I/opt/homebrew/Cellar/sdl2/2.30.11/include -isystem /opt/homebrew/Cellar/sdl2/2.30.11/include/SDL2 -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -o CMakeFiles/main.dir/src/main.cpp.o -c /Users/ramjav/workspace/3DSoftwareRendering/src/main.cpp",
-  "file": "/Users/ramjav/workspace/3DSoftwareRendering/src/main.cpp",
-  "output": "CMakeFiles/main.dir/src/main.cpp.o"
-}
-]

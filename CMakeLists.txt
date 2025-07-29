@@ -1,15 +1,24 @@
 cmake_minimum_required(VERSION 3.26)
-
 project(main)
 
-aux_source_directory(./src SRC_LIST)
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+# Source and header directories
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../include)
+# Recursively collect all source files in src/
+file(GLOB_RECURSE SRC_FILES ${SRC_DIR}/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${INCLUDE_DIR}
+)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_compile_definitions(${PROJECT_NAME} PRIVATE IMGDIR="../img/")
 
-# For macOS M2 systems with SDL2 installed via Homebrew
+# SDL2 setup
 list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/SDL2" "/opt/homebrew/lib/cmake/SDL2")
 list(APPEND CMAKE_PREFIX_PATH "/usr/local" "/opt/homebrew")
 
@@ -20,7 +29,6 @@ if (SDL2_FOUND)
     target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 else()
-    # Fall back on pkg-config
     include(FindPkgConfig)
     pkg_search_module(SDL2 REQUIRED sdl2)
     message("Using SDL2 from pkg-config")

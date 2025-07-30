@@ -4,6 +4,7 @@ project(main)
 # Source and header directories
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CMAKE_OSX_ARCHITECTURES arm64 CACHE STRING "" FORCE)
 
 # Recursively collect all source files in src/
 file(GLOB_RECURSE SRC_FILES ${SRC_DIR}/*.cpp)
@@ -17,6 +18,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_compile_definitions(${PROJECT_NAME} PRIVATE IMGDIR="../img/")
+target_compile_options(${PROJECT_NAME} PRIVATE -mcpu=apple-m4)
 
 # SDL2 setup
 list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/SDL2" "/opt/homebrew/lib/cmake/SDL2")

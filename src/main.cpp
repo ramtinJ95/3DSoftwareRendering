@@ -23,8 +23,8 @@ bool initialize_window(void)
     fprintf(stderr, "Error initializing SDL.\n");
     return false;
   }
-  window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                            window_width, window_height, SDL_WINDOW_INPUT_GRABBED);
+  window = SDL_CreateWindow("SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width,
+                            window_height, SDL_WINDOW_INPUT_GRABBED);
   if (!window)
   {
     fprintf(stderr, "Error creating sdl window");
@@ -119,6 +119,36 @@ void clear_color_buffer_SIMD(uint32_t *buffer, size_t width, size_t height, uint
   }
 }
 
+void draw_grid(int spacing, uint32_t grid_color)
+{
+  // horizontal lines
+  for (int i = 0; i < window_height; i += spacing)
+  {
+    for (int j = 0; j < window_width; j++)
+    {
+      color_buffer[i * window_width + j] = grid_color;
+    }
+  }
+  // vertical lines
+  for (int j = 0; j < window_width; j += spacing)
+  {
+    for (int i = 0; i < window_height; i++)
+    {
+      color_buffer[i * window_width + j] = grid_color;
+    }
+  }
+}
+void draw_rectangle(int x_pos, int y_pos, int width, int height, uint32_t color)
+{
+  for (int y = y_pos; y < y_pos + height; y++)
+  {
+    for (int x = x_pos; x < x_pos + width; x++)
+    {
+      color_buffer[y * window_width + x] = color;
+    }
+  }
+}
+
 void render_color_buffer(void)
 {
   SDL_UpdateTexture(color_buffer_texture, NULL, color_buffer,
@@ -128,12 +158,16 @@ void render_color_buffer(void)
 
 void render(void)
 {
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
   // clear_color_buffer(0xFFFFF00);
+
+  draw_grid(10, 0xFF333333);
+  draw_rectangle(400, 600, 200, 400, 0xFFFF0000);
+
   render_color_buffer();
-  clear_color_buffer_SIMD(color_buffer, window_width, window_height, 0xFFFFF00);
+  clear_color_buffer_SIMD(color_buffer, window_width, window_height, 0xFF000000);
 
   SDL_RenderPresent(renderer);
 }

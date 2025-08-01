@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL2/SDL.h>
 #include <SDL_render.h>
 #include <arm_neon.h>
@@ -23,3 +24,11 @@ void render_color_buffer(void);
 void clear_color_buffer(uint32_t color);
 void clear_color_buffer_SIMD(uint32_t *buffer, size_t width, size_t height, uint32_t color);
 void destroy_window(void);
+
+inline void draw_pixel(int x_pos, int y_pos, uint32_t color)
+{
+  if (x_pos >= 0 && x_pos < WINDOW_WIDTH && y_pos >= 0 && y_pos < WINDOW_HEIGHT)
+  {
+    color_buffer[(y_pos * WINDOW_WIDTH) + x_pos] = color;
+  }
+}

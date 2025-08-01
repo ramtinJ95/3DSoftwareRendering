@@ -100,13 +100,14 @@ void draw_grid(int spacing, uint32_t grid_color)
     }
   }
 }
+
 void draw_rectangle(int x_pos, int y_pos, int width, int height, uint32_t color)
 {
   for (int y = y_pos; y < y_pos + height; y++)
   {
     for (int x = x_pos; x < x_pos + width; x++)
     {
-      color_buffer[y * WINDOW_WIDTH + x] = color;
+      draw_pixel(x, y, color);
     }
   }
 }

@@ -2,9 +2,10 @@
 #include "vector.hpp"
 
 const int N_POINTS = 9 * 9 * 9;
-float fov_factor = 128;
+float fov_factor = 640;
 bool is_running = false;
 Vec3 cube_points[N_POINTS];
+const Vec3 camera_position(0, 0, -5);
 Vec2 projected_points[N_POINTS];
 
 void setup(void)
@@ -54,7 +55,7 @@ void process_input(void)
 // Function that receives 3D vector and return projected 2D point
 Vec2 project(Vec3 point)
 {
-  Vec2 projected_point(fov_factor * point.x, fov_factor * point.y);
+  Vec2 projected_point(fov_factor * point.x / point.z, fov_factor * point.y / point.z);
   return projected_point;
 }
 
@@ -63,6 +64,7 @@ void update(void)
   for (int i = 0; i < N_POINTS; i++)
   {
     Vec3 point = cube_points[i];
+    point.z -= camera_position.z;
     Vec2 projected_point = project(point);
     projected_points[i] = projected_point;
   }
@@ -72,8 +74,8 @@ void render(void)
 {
   draw_grid(10, 0xFF333333);
 
-  float translate_amount_x = WINDOW_WIDTH / 2;
-  float translate_amount_y = WINDOW_HEIGHT / 2;
+  const float translate_amount_x = WINDOW_WIDTH / 2;
+  const float translate_amount_y = WINDOW_HEIGHT / 2;
   for (int i = 0; i < N_POINTS; i++)
   {
     Vec2 projected_point = projected_points[i];

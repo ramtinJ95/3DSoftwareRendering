@@ -7,6 +7,7 @@ bool is_running = false;
 Vec3 cube_points[N_POINTS];
 const Vec3 camera_position(0, 0, -5);
 Vec2 projected_points[N_POINTS];
+Vec3 cube_rotation(0, 0, 0);
 
 void setup(void)
 {
@@ -61,18 +62,25 @@ Vec2 project(Vec3 point)
 
 void update(void)
 {
+  cube_rotation.x += 0.001;
+  cube_rotation.y += 0.001;
+  cube_rotation.z += 0.001;
+
   for (int i = 0; i < N_POINTS; i++)
   {
     Vec3 point = cube_points[i];
-    point.z -= camera_position.z;
-    Vec2 projected_point = project(point);
+    Vec3 transformed_point = vec3_rotate_x(&point, cube_rotation.x);
+    transformed_point = vec3_rotate_y(&transformed_point, cube_rotation.y);
+    transformed_point = vec3_rotate_z(&transformed_point, cube_rotation.z);
+    transformed_point.z -= camera_position.z;
+    Vec2 projected_point = project(transformed_point);
     projected_points[i] = projected_point;
   }
 }
 
 void render(void)
 {
-  draw_grid(10, 0xFF333333);
+  // draw_grid(10, 0xFF333333);
 
   const float translate_amount_x = WINDOW_WIDTH / 2;
   const float translate_amount_y = WINDOW_HEIGHT / 2;

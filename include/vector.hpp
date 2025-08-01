@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 struct Vec2
 {
@@ -21,3 +22,24 @@ struct Vec3
   {
   }
 };
+
+inline Vec3 vec3_rotate_x(const Vec3 *v, float angle)
+{
+  Vec3 rotated_vector(v->x, v->y * cos(angle) - v->z * sin(angle),
+                      v->y * sin(angle) + v->z * cos(angle));
+  return rotated_vector;
+}
+
+inline Vec3 vec3_rotate_y(const Vec3 *v, float angle)
+{
+  Vec3 rotated_vector(v->x * cos(angle) - v->z * sin(angle), v->y,
+                      v->x * sin(angle) + v->z * cos(angle));
+  return rotated_vector;
+}
+
+inline Vec3 vec3_rotate_z(const Vec3 *v, float angle)
+{
+  Vec3 rotated_vector(v->x * cos(angle) - v->y * sin(angle), v->x * sin(angle) + v->y * cos(angle),
+                      v->z);
+  return rotated_vector;
+}

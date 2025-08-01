@@ -23,6 +23,8 @@ extern SDL_Texture *color_buffer_texture;
 bool initialize_window(void);
 void draw_grid(int spacing, uint32_t grid_color);
 void draw_rectangle(int x_pos, int y_pos, int width, int height, uint32_t color);
+void draw_line(int x0, int y0, int x1, int y1, uint32_t color);
+void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, uint32_t color);
 void render_color_buffer(void);
 void clear_color_buffer(uint32_t color);
 void clear_color_buffer_SIMD(uint32_t *buffer, size_t width, size_t height, uint32_t color);

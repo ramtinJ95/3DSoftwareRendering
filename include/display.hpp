@@ -10,12 +10,15 @@
 #include <stdint.h>
 #include <stdio.h>
 
+inline constexpr int FPS = 60;
+inline constexpr float FRAME_TARGET_TIME = 1000.0f / FPS;
+inline constexpr int WINDOW_WIDTH = 1920;
+inline constexpr int WINDOW_HEIGHT = 1080;
+
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern uint32_t *color_buffer;
 extern SDL_Texture *color_buffer_texture;
-extern int WINDOW_WIDTH;
-extern int WINDOW_HEIGHT;
 
 bool initialize_window(void);
 void draw_grid(int spacing, uint32_t grid_color);

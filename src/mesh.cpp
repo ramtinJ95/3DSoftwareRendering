@@ -1,6 +1,9 @@
 #include "mesh.hpp"
+#include <vector>
 
-Vec3 mesh_vertices[N_MESH_VERTICES] = {
+Mesh mesh;
+
+Vec3 cube_vertices[N_CUBE_VERTICES] = {
     Vec3(-1, -1, -1), // 1
     Vec3(-1, 1, -1),  // 2
     Vec3(1, 1, -1),   // 3
@@ -11,7 +14,7 @@ Vec3 mesh_vertices[N_MESH_VERTICES] = {
     Vec3(-1, -1, 1)   // 8
 };
 
-Face mesh_faces[N_MESH_FACES] = {
+Face cube_faces[N_CUBE_FACES] = {
     // front
     Face(1, 2, 3), Face(1, 3, 4),
     // right
@@ -24,3 +27,19 @@ Face mesh_faces[N_MESH_FACES] = {
     Face(2, 7, 5), Face(2, 5, 3),
     // bottom
     Face(6, 8, 1), Face(6, 1, 4)};
+
+Mesh load_cube_mesh_data(void)
+{
+  std::vector<Vec3> cube_vertices_temp;
+  std::vector<Face> cube_faces_temp;
+  for (int i = 0; i < N_CUBE_VERTICES; i++)
+  {
+    cube_vertices_temp.push_back(cube_vertices[i]);
+  }
+  for (int i = 0; i < N_CUBE_FACES; i++)
+  {
+    cube_faces_temp.push_back(cube_faces[i]);
+  }
+  Mesh mesh(std::move(cube_vertices_temp), std::move(cube_faces_temp), Vec3{0, 0, 0});
+  return mesh;
+}

@@ -2,12 +2,12 @@
 #include "mesh.hpp"
 #include "triangle.hpp"
 #include "vector.hpp"
-#include <SDL_timer.h>
+#include <vector>
 
-Triangle triangles_to_render[N_MESH_FACES];
+// Triangle triangles_to_render[N_MESH_FACES];
+std::vector<Triangle> triangles_to_render;
 
 const Vec3 camera_position(0, 0, -5);
-Vec3 cube_rotation(0, 0, 0);
 
 float fov_factor = 640;
 
@@ -22,6 +22,7 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
+  mesh = load_cube_mesh_data();
 }
 
 void process_input(void)
@@ -58,23 +59,24 @@ void update(void)
   }
 
   previous_frame_time = SDL_GetTicks();
+  int num_faces = mesh.mesh_faces.size();
 
-  for (int i = 0; i < N_MESH_FACES; i++)
+  for (int i = 0; i < num_faces; i++)
   {
-    Face mesh_face = mesh_faces[i];
+    Face mesh_face = mesh.mesh_faces[i];
     Vec3 face_vertices[3];
-    face_vertices[0] = mesh_vertices[mesh_face.a - 1];
-    face_vertices[1] = mesh_vertices[mesh_face.b - 1];
-    face_vertices[2] = mesh_vertices[mesh_face.c - 1];
+    face_vertices[0] = mesh.vertices[mesh_face.a - 1];
+    face_vertices[1] = mesh.vertices[mesh_face.b - 1];
+    face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
     Triangle projected_triangle;
 
     for (int j = 0; j < 3; j++)
     {
       Vec3 transformed_vertex = face_vertices[j];
-      transformed_vertex = vec3_rotate_x(&transformed_vertex, cube_rotation.x);
-      transformed_vertex = vec3_rotate_y(&transformed_vertex, cube_rotation.y);
-      transformed_vertex = vec3_rotate_z(&transformed_vertex, cube_rotation.z);
+      transformed_vertex = vec3_rotate_x(&transformed_vertex, mesh.rotation.x);
+      transformed_vertex = vec3_rotate_y(&transformed_vertex, mesh.rotation.y);
+      transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
 
       // Translate the vertex away from the camera
       transformed_vertex.z -= camera_position.z;
@@ -87,34 +89,35 @@ void update(void)
 
       projected_triangle.points[j] = projected_point;
     }
-    triangles_to_render[i] = projected_triangle;
+    // triangles_to_render[i] = projected_triangle;
+    triangles_to_render.push_back(projected_triangle);
   }
 
-  cube_rotation.x += 0.01;
-  cube_rotation.y += 0.01;
-  cube_rotation.z += 0.01;
+  mesh.rotation.x += 0.01;
+  mesh.rotation.y += 0.01;
+  mesh.rotation.z += 0.01;
 }
 
 void render(void)
 {
   // draw_grid(10, 0xFF333333);
 
-  for (int i = 0; i < N_MESH_FACES; i++)
+  for (const Triangle &triangle : triangles_to_render)
   {
-    Triangle triangle = triangles_to_render[i];
-    draw_rectangle(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF0000);
-    draw_rectangle(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF0000);
-    draw_rectangle(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF0000);
-
+    // Triangle triangle = triangles_to_render[i];
+    // draw_rectangle(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF0000);
+    // draw_rectangle(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF0000);
+    // draw_rectangle(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF0000);
+    //
     draw_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
                   triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF0000);
   }
-  draw_line(100, 200, 150, 250, 0xFFFF0000);
 
   render_color_buffer();
   clear_color_buffer_SIMD(color_buffer, WINDOW_WIDTH, WINDOW_HEIGHT, 0xFF000000);
 
   SDL_RenderPresent(renderer);
+  triangles_to_render.clear();
 }
 
 int main(void)

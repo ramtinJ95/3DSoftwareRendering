@@ -1,5 +1,7 @@
 #include "mesh.hpp"
-#include <vector>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 Mesh mesh;
 
@@ -42,4 +44,46 @@ Mesh load_cube_mesh_data(void)
   }
   Mesh mesh(std::move(cube_vertices_temp), std::move(cube_faces_temp), Vec3{0, 0, 0});
   return mesh;
+}
+
+Mesh load_obj_file_data(std::string filepath)
+{
+  std::ifstream file(filepath);
+  if (!file.is_open())
+  {
+    std::cerr << "Error: Could not open the file.\n";
+    Mesh empty_mesh;
+    return empty_mesh; // this is garbage code
+  }
+
+  std::vector<Vec3> vertices;
+  std::string line;
+
+  while (std::getline(file, line))
+  {
+    if (line.empty())
+      continue;
+
+    std::istringstream iss(line);
+    std::string prefix;
+    iss >> prefix;
+
+    if (prefix == "v")
+    {
+      int x, y, z;
+      iss >> x >> y >> z;
+      Vec3 v(x, y, z);
+      vertices.push_back(v);
+    }
+
+    if (prefix == "f")
+    {
+    }
+  }
+
+  // 4. Close the file
+  file.close();
+
+  Mesh random_mesh;
+  return random_mesh;
 }

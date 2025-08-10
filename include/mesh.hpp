@@ -2,6 +2,7 @@
 
 #include "triangle.hpp"
 #include "vector.hpp"
+#include <string>
 #include <vector>
 
 inline constexpr int N_CUBE_VERTICES = 8;
@@ -44,3 +45,4 @@ struct Mesh
 extern Mesh mesh;
 
 Mesh load_cube_mesh_data(void);
+Mesh load_obj_file_data(std::string filepath);

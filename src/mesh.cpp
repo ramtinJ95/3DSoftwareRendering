@@ -57,6 +57,7 @@ Mesh load_obj_file_data(std::string filepath)
   }
 
   std::vector<Vec3> vertices;
+  std::vector<Face> faces;
   std::string line;
 
   while (std::getline(file, line))
@@ -70,7 +71,7 @@ Mesh load_obj_file_data(std::string filepath)
 
     if (prefix == "v")
     {
-      int x, y, z;
+      float x, y, z;
       iss >> x >> y >> z;
       Vec3 v(x, y, z);
       vertices.push_back(v);
@@ -78,12 +79,42 @@ Mesh load_obj_file_data(std::string filepath)
 
     if (prefix == "f")
     {
+      Face face;
+      std::string vertex_data;
+      while (iss >> vertex_data)
+      {
+        std::istringstream v_data(vertex_data);
+        std::string vertex, texture, normal;
+
+        std::getline(v_data, vertex, '/');
+        std::getline(v_data, texture, '/');
+        std::getline(v_data, normal, '/');
+
+        face.v = std::stoi(vertex);
+        face.t = std::stoi(texture);
+        face.n = std::stoi(normal);
+
+        faces.push_back(face);
+      }
     }
   }
 
   // 4. Close the file
   file.close();
+  // debug
+  std::cout << "Vertex data print" << std::endl;
+  for (const Vec3 &point : vertices)
+  {
+    std::cout << "";
+    std::cout << point.x << " " << point.y << " " << point.z << " " << std::endl;
+  }
+  std::cout << "Faces data print" << std::endl;
+  for (const Face &f : faces)
+  {
+    std::cout << "";
+    std::cout << f.v << " " << f.t << " " << f.n << " " << std::endl;
+  }
 
-  Mesh random_mesh;
+  Mesh random_mesh(std::move(vertices), std::move(faces), Vec3{0, 0, 0});
   return random_mesh;
 }

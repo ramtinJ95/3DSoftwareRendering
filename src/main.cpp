@@ -22,7 +22,7 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-  mesh = load_obj_file_data("assets/cube.obj");
+  mesh = load_obj_file_data("assets/f22.obj");
 }
 
 void process_input(void)
@@ -65,9 +65,9 @@ void update(void)
   {
     Face mesh_face = mesh.mesh_faces[i];
     Vec3 face_vertices[3];
-    face_vertices[0] = mesh.vertices[mesh_face.v - 1];
-    face_vertices[1] = mesh.vertices[mesh_face.t - 1];
-    face_vertices[2] = mesh.vertices[mesh_face.n - 1];
+    face_vertices[0] = mesh.vertices[mesh_face.a - 1];
+    face_vertices[1] = mesh.vertices[mesh_face.b - 1];
+    face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
     Triangle projected_triangle;
 
@@ -94,8 +94,8 @@ void update(void)
   }
 
   mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
-  mesh.rotation.z += 0.01;
+  mesh.rotation.y += 0.00;
+  mesh.rotation.z += 0.00;
 }
 
 void render(void)

@@ -3,15 +3,15 @@
 
 struct Face
 {
-  int v, t, n;
+  int a, b, c;
 
   // Default constructor
-  Face() : v(0), t(0), n(0)
+  Face() : a(0), b(0), c(0)
   {
   }
 
   // Constructor with parameters
-  Face(int a_, int b_, int c_) : v(a_), t(b_), n(c_)
+  Face(int a_, int b_, int c_) : a(a_), b(b_), c(c_)
   {
   }
 };

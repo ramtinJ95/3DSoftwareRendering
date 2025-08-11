@@ -1,7 +1,9 @@
 #include "mesh.hpp"
+#include "vector.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 Mesh mesh;
 
@@ -48,73 +50,29 @@ Mesh load_cube_mesh_data(void)
 
 Mesh load_obj_file_data(std::string filepath)
 {
-  std::ifstream file(filepath);
-  if (!file.is_open())
-  {
-    std::cerr << "Error: Could not open the file.\n";
-    Mesh empty_mesh;
-    return empty_mesh; // this is garbage code
-  }
-
   std::vector<Vec3> vertices;
   std::vector<Face> faces;
+  std::ifstream ifs(filepath);
   std::string line;
-
-  while (std::getline(file, line))
+  while (std::getline(ifs, line))
   {
-    if (line.empty())
-      continue;
-
     std::istringstream iss(line);
-    std::string prefix;
-    iss >> prefix;
+    std::string token;
 
-    if (prefix == "v")
+    iss >> token;
+    if (token == "v")
     {
-      float x, y, z;
-      iss >> x >> y >> z;
-      Vec3 v(x, y, z);
+      Vec3 v;
+      iss >> v.x >> v.y >> v.z;
       vertices.push_back(v);
     }
-
-    if (prefix == "f")
+    else if (token == "f")
     {
-      Face face;
-      std::string vertex_data;
-      while (iss >> vertex_data)
-      {
-        std::istringstream v_data(vertex_data);
-        std::string vertex, texture, normal;
-
-        std::getline(v_data, vertex, '/');
-        std::getline(v_data, texture, '/');
-        std::getline(v_data, normal, '/');
-
-        face.v = std::stoi(vertex);
-        face.t = std::stoi(texture);
-        face.n = std::stoi(normal);
-
-        faces.push_back(face);
-      }
+      Face f;
+      iss >> f.a >> token >> f.b >> token >> f.c;
+      faces.push_back(f);
     }
   }
-
-  // 4. Close the file
-  file.close();
-  // debug
-  std::cout << "Vertex data print" << std::endl;
-  for (const Vec3 &point : vertices)
-  {
-    std::cout << "";
-    std::cout << point.x << " " << point.y << " " << point.z << " " << std::endl;
-  }
-  std::cout << "Faces data print" << std::endl;
-  for (const Face &f : faces)
-  {
-    std::cout << "";
-    std::cout << f.v << " " << f.t << " " << f.n << " " << std::endl;
-  }
-
-  Mesh random_mesh(std::move(vertices), std::move(faces), Vec3{0, 0, 0});
-  return random_mesh;
+  Mesh mesh(std::move(vertices), std::move(faces));
+  return mesh;
 }

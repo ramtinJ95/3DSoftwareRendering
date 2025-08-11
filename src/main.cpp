@@ -7,7 +7,7 @@
 // Triangle triangles_to_render[N_MESH_FACES];
 std::vector<Triangle> triangles_to_render;
 
-const Vec3 camera_position(0, 0, -5);
+const Vec3 camera_position(0, 0, 0);
 
 float fov_factor = 640;
 
@@ -60,16 +60,22 @@ void update(void)
 
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
+  mesh.rotation.x += 0.01;
+  mesh.rotation.y += 0.00;
+  mesh.rotation.z += 0.00;
 
   for (int i = 0; i < num_faces; i++)
   {
     Face mesh_face = mesh.mesh_faces[i];
+
     Vec3 face_vertices[3];
     face_vertices[0] = mesh.vertices[mesh_face.a - 1];
     face_vertices[1] = mesh.vertices[mesh_face.b - 1];
     face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
     Triangle projected_triangle;
+
+    Vec3 transformed_vertices[3];
 
     for (int j = 0; j < 3; j++)
     {
@@ -79,10 +85,34 @@ void update(void)
       transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
 
       // Translate the vertex away from the camera
-      transformed_vertex.z -= camera_position.z;
+      transformed_vertex.z += 5;
 
-      Vec2 projected_point = project(transformed_vertex);
+      transformed_vertices[j] = transformed_vertex;
+    }
+    // check back face culling before projecting
+    Vec3 vector_a = transformed_vertices[0];
+    Vec3 vector_b = transformed_vertices[1];
+    Vec3 vector_c = transformed_vertices[2];
 
+    Vec3 v1 = vec3_sub(vector_b, vector_a);
+    Vec3 v2 = vec3_sub(vector_c, vector_a);
+
+    Vec3 normal = vec3_cross(v1, v2);
+    Vec3 camera_ray = vec3_sub(camera_position, vector_a);
+
+    float dot_product = vec3_dot(normal, camera_ray);
+
+    // if dot product is negative then the face is pointing away from the
+    // camera so we bypass the triangle entirely so we can save rendering cycles
+    if (dot_product < 0)
+    {
+      continue;
+    }
+
+    // performing the projection
+    for (int j = 0; j < 3; j++)
+    {
+      Vec2 projected_point = project(transformed_vertices[j]);
       // scale and translate the projected vertices to the middle of the screen
       projected_point.x += WINDOW_WIDTH / 2;
       projected_point.y += WINDOW_HEIGHT / 2;
@@ -92,10 +122,6 @@ void update(void)
     // triangles_to_render[i] = projected_triangle;
     triangles_to_render.push_back(projected_triangle);
   }
-
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.00;
-  mesh.rotation.z += 0.00;
 }
 
 void render(void)

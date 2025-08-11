@@ -78,7 +78,7 @@ inline Vec3 vec3_cross(const Vec3 &v1, const Vec3 &v2)
 
 inline float vec3_dot(const Vec3 &v1, const Vec3 &v2)
 {
-  float dot_product = v1.x * v2.x * +v1.y * v2.y * +v1.z * v2.z;
+  float dot_product = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
   return dot_product;
 }
 
@@ -102,20 +102,20 @@ inline Vec3 vec3_div(const Vec3 &v1, const float scalar)
   return result;
 }
 
-inline Vec3 vec3_add(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3)
+inline Vec3 vec3_add(const Vec3 &v1, const Vec3 &v2)
 {
-  float x = v1.x + v2.x + v3.x;
-  float y = v1.y + v2.y + v3.y;
-  float z = v1.z + v2.z + v3.z;
+  float x = v1.x + v2.x;
+  float y = v1.y + v2.y;
+  float z = v1.z + v2.z;
   Vec3 result(x, y, z);
   return result;
 }
 
-inline Vec3 vec3_sub(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3)
+inline Vec3 vec3_sub(const Vec3 &v1, const Vec3 &v2)
 {
-  float x = v1.x - v2.x - v3.x;
-  float y = v1.y - v2.y - v3.y;
-  float z = v1.z - v2.z - v3.z;
+  float x = v1.x - v2.x;
+  float y = v1.y - v2.y;
+  float z = v1.z - v2.z;
   Vec3 result(x, y, z);
   return result;
 }

@@ -30,6 +30,21 @@ inline float vec2_length(const Vec2 &v)
   float vector_length = sqrtf(x_squared + y_squared);
   return vector_length;
 }
+inline Vec2 vec2_get_normalized_vector(const Vec2 &v)
+{
+  Vec2 result_vector = v;
+  float length = vec2_length(result_vector);
+  result_vector.x /= length;
+  result_vector.y /= length;
+  return result_vector;
+}
+
+inline void vec2_normalize(Vec2 &v)
+{
+  float length = vec2_length(v);
+  v.x /= length;
+  v.y /= length;
+}
 
 inline Vec2 vec2_add(const Vec2 &v1, const Vec2 &v2)
 {
@@ -126,6 +141,23 @@ inline float vec3_length(const Vec3 &v)
   float z_squared = v.z * v.z;
   float vector_length = sqrtf(x_squared + y_squared + z_squared);
   return vector_length;
+}
+inline Vec3 vec3_get_normalized_vector(const Vec3 &v)
+{
+  Vec3 result_vector = v;
+  float length = vec3_length(result_vector);
+  result_vector.x /= length;
+  result_vector.y /= length;
+  result_vector.z /= length;
+  return result_vector;
+}
+
+inline void vec3_normalize(Vec3 &v)
+{
+  float length = vec3_length(v);
+  v.x /= length;
+  v.y /= length;
+  v.z /= length;
 }
 
 inline Vec3 vec3_rotate_x(const Vec3 *v, float angle)

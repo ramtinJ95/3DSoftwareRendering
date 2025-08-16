@@ -13,7 +13,7 @@ bool initialize_window(void)
     return false;
   }
   window = SDL_CreateWindow("SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
-                            WINDOW_HEIGHT, SDL_WINDOW_INPUT_GRABBED);
+                            WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
   if (!window)
   {
     fprintf(stderr, "Error creating sdl window");
@@ -61,23 +61,23 @@ color buffer
      ← fillColor (4 at once) ←       ← fillColor       ← fallback loop
 
 */
-void clear_color_buffer_SIMD(uint32_t *buffer, size_t width, size_t height, uint32_t color)
-{
-  size_t count = width * height;
-  size_t i = 0;
-
-  uint32x4_t fillColor = vdupq_n_u32(color);
-
-  for (; i + 4 <= count; i += 4)
-  {
-    vst1q_u32(&buffer[i], fillColor);
-  }
-
-  for (; i < count; i++)
-  {
-    buffer[i] = color;
-  }
-}
+// void clear_color_buffer_SIMD(uint32_t *buffer, size_t width, size_t height, uint32_t color)
+// {
+//   size_t count = width * height;
+//   size_t i = 0;
+//
+//   uint32x4_t fillColor = vdupq_n_u32(color);
+//
+//   for (; i + 4 <= count; i += 4)
+//   {
+//     vst1q_u32(&buffer[i], fillColor);
+//   }
+//
+//   for (; i < count; i++)
+//   {
+//     buffer[i] = color;
+//   }
+// }
 
 void draw_grid(int spacing, uint32_t grid_color)
 {

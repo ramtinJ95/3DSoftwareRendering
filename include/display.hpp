@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL_render.h>
-#include <arm_neon.h>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -12,8 +11,8 @@
 
 inline constexpr int FPS = 60;
 inline constexpr float FRAME_TARGET_TIME = 1000.0f / FPS;
-inline constexpr int WINDOW_WIDTH = 1920;
-inline constexpr int WINDOW_HEIGHT = 1080;
+inline constexpr int WINDOW_WIDTH = 800;
+inline constexpr int WINDOW_HEIGHT = 640;
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;

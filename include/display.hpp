@@ -11,8 +11,8 @@
 
 inline constexpr int FPS = 60;
 inline constexpr float FRAME_TARGET_TIME = 1000.0f / FPS;
-inline constexpr int WINDOW_WIDTH = 840;
-inline constexpr int WINDOW_HEIGHT = 640;
+inline constexpr int WINDOW_WIDTH = 900;
+inline constexpr int WINDOW_HEIGHT = 800;
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;

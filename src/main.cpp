@@ -128,20 +128,20 @@ void render(void)
 {
   // draw_grid(10, 0xFF333333);
 
-  for (const Triangle &triangle : triangles_to_render)
-  {
-    // Triangle triangle = triangles_to_render[i];
-    // draw_rectangle(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF0000);
-    // draw_rectangle(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF0000);
-    // draw_rectangle(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF0000);
-    //
-    draw_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
-                  triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF0000);
-  }
-
+  // for (const Triangle &triangle : triangles_to_render)
+  // {
+  //   // Triangle triangle = triangles_to_render[i];
+  //   draw_rectangle(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF0000);
+  //   draw_rectangle(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF0000);
+  //   draw_rectangle(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF0000);
+  //
+  //   draw_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
+  //                 triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF0000);
+  // }
+  //
   render_color_buffer();
   clear_color_buffer(0xFF000000);
-  draw_triangle(100, 100, 200, 200, 300, 100, 0xFF00FF00);
+  draw_triangle(300, 100, 50, 400, 500, 700, 0xFF00FF00);
   // clear_color_buffer_SIMD(color_buffer, WINDOW_WIDTH, WINDOW_HEIGHT, 0xFF000000);
 
   SDL_RenderPresent(renderer);

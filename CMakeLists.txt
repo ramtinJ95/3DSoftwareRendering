@@ -32,7 +32,7 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Recursively collect all source files in src/
-file(GLOB_RECURSE SRC_FILES ${SRC_DIR}/*.cpp)
+file(GLOB_RECURSE SRC_FILES  ${SRC_DIR}/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 

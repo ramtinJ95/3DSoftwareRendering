@@ -4,6 +4,29 @@ project(main)
 # Export compile commands for clangd / LSP
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Force ccache if available (must come early)
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  message(STATUS "ccache found: ${CCACHE_PROGRAM}")
+  set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}" CACHE STRING "C++ compiler launcher" FORCE)
+  set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}" CACHE STRING "C compiler launcher" FORCE)
+endif()
+
+# Auto-detect Ninja (faster than Make)
+if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+  find_program(NINJA_EXE ninja)
+  if(NINJA_EXE)
+    message(STATUS "Ninja found, recommending use: cmake -S . -B build -G Ninja")
+  endif()
+endif()
+
+# Auto-detect Clang++
+find_program(CLANGXX clang++)
+if(CLANGXX)
+  message(STATUS "Clang++ found, using it instead of g++")
+  set(CMAKE_CXX_COMPILER ${CLANGXX} CACHE STRING "" FORCE)
+endif()
+
 # Source and header directories
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -43,7 +66,6 @@ if (SDL2_FOUND AND SDL2_IMAGE_FOUND)
   target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
-  # Only adjust RPATH if libraries are outside standard system paths
   if(UNIX AND NOT APPLE)
     foreach(lib_dir ${SDL2_LIBRARY_DIRS} ${SDL2_IMAGE_LIBRARY_DIRS})
       if(NOT lib_dir MATCHES "^/usr(/|$)")
@@ -57,7 +79,6 @@ if (SDL2_FOUND AND SDL2_IMAGE_FOUND)
   endif()
 
 else()
-  # fallback to pkg-config
   find_package(PkgConfig REQUIRED)
   pkg_search_module(SDL2 REQUIRED sdl2)
   pkg_search_module(SDL2_IMAGE REQUIRED SDL2_image)

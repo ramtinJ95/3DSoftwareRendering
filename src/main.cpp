@@ -141,7 +141,8 @@ void render(void)
   //
   render_color_buffer();
   clear_color_buffer(0xFF000000);
-  draw_triangle(300, 100, 50, 400, 500, 700, 0xFF00FF00);
+  draw_filled_triangle(300, 100, 50, 400, 500, 700, 0xFF00FF00);
+
   // clear_color_buffer_SIMD(color_buffer, WINDOW_WIDTH, WINDOW_HEIGHT, 0xFF000000);
 
   SDL_RenderPresent(renderer);

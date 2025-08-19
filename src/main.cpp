@@ -8,6 +8,7 @@
 std::vector<Triangle> triangles_to_render;
 
 const Vec3 camera_position(0, 0, 0);
+const int CAMERA_ZOOM = 7;
 
 float fov_factor = 640;
 
@@ -22,7 +23,7 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-  mesh = load_obj_file_data("assets/f22.obj");
+  mesh = load_obj_file_data("assets/cube.obj");
 }
 
 void process_input(void)
@@ -61,8 +62,8 @@ void update(void)
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
   mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.00;
-  mesh.rotation.z += 0.00;
+  mesh.rotation.y += 0.01;
+  mesh.rotation.z += 0.01;
 
   for (int i = 0; i < num_faces; i++)
   {
@@ -85,7 +86,7 @@ void update(void)
       transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
 
       // Translate the vertex away from the camera
-      transformed_vertex.z += 5;
+      transformed_vertex.z += CAMERA_ZOOM;
 
       transformed_vertices[j] = transformed_vertex;
     }
@@ -130,13 +131,11 @@ void render(void)
 
   for (const Triangle &triangle : triangles_to_render)
   {
-    // Triangle triangle = triangles_to_render[i];
-    // draw_rectangle(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF0000);
-    // draw_rectangle(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF0000);
-    // draw_rectangle(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF0000);
-    //
+    draw_filled_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
+                         triangle.points[1].y, triangle.points[2].x, triangle.points[2].y,
+                         0xFF00FF00);
     draw_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
-                  triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF0000);
+                  triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0x00000000);
   }
 
   render_color_buffer();

@@ -48,12 +48,24 @@ void draw_filled_triangle(int x0, int y0, int x1, int y1, int x2, int y2, uint32
     std::swap(y0, y1);
   }
 
-  // Find the middle point that divides the triangle into 2, one top and one bottom part
-  int middle_y = y1;
-  int p0p2_y = y2 - y0;
-  int p0p2_x = x2 - x0;
-  float t = (float)(y1 - y0) / p0p2_y;
-  int middle_x = x0 + t * p0p2_x;
-  draw_flat_bottom_triangle(x0, y0, x1, y1, middle_x, middle_y, color);
-  draw_flat_top_triangle(x1, y1, middle_x, middle_y, x2, y2, color);
+  // edge case handling so we dont divide with zero
+  if (y1 == y2)
+  {
+    draw_flat_bottom_triangle(x0, y0, x1, y1, x2, y2, color);
+  }
+  else if (y0 == y1)
+  {
+    draw_flat_top_triangle(x0, y0, x1, y1, x2, y2, color);
+  }
+  else
+  {
+    // Find the middle point that divides the triangle into 2, one top and one bottom part
+    int middle_y = y1;
+    int p0p2_y = y2 - y0;
+    int p0p2_x = x2 - x0;
+    float t = (float)(y1 - y0) / p0p2_y;
+    int middle_x = x0 + t * p0p2_x;
+    draw_flat_bottom_triangle(x0, y0, x1, y1, middle_x, middle_y, color);
+    draw_flat_top_triangle(x1, y1, middle_x, middle_y, x2, y2, color);
+  }
 }

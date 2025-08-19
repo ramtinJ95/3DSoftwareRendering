@@ -23,7 +23,7 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-  mesh = load_obj_file_data("assets/cube.obj");
+  mesh = load_obj_file_data("assets/f22.obj");
 }
 
 void process_input(void)

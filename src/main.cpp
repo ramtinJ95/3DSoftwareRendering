@@ -46,7 +46,7 @@ void process_input(void)
 // Function that receives 3D vector and return projected 2D point
 Vec2 project(Vec3 point)
 {
-  Vec2 projected_point(fov_factor * point.x / point.z, fov_factor * point.y / point.z);
+  Vec2 projected_point(fov_factor * point.x / point.z, -fov_factor * point.y / point.z);
   return projected_point;
 }
 
@@ -61,9 +61,9 @@ void update(void)
 
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
-  mesh.rotation.z += 0.01;
+  mesh.rotation.x += 0.00;
+  mesh.rotation.y += 0.00;
+  mesh.rotation.z += 0.00;
 
   for (int i = 0; i < num_faces; i++)
   {

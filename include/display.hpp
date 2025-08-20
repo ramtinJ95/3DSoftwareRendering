@@ -15,6 +15,20 @@ inline constexpr float FRAME_TARGET_TIME = 1000.0f / FPS;
 inline constexpr int WINDOW_WIDTH = 1920;
 inline constexpr int WINDOW_HEIGHT = 1080;
 
+enum class Cull_method
+{
+  cull_none,
+  cull_backface
+};
+
+enum class Render_method
+{
+  render_wire,
+  render_wire_vertex,
+  render_fill_triangle,
+  render_fill_triangle_wire
+};
+
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern uint32_t *color_buffer;

@@ -20,17 +20,17 @@ Vec3 cube_vertices[N_CUBE_VERTICES] = {
 
 Face cube_faces[N_CUBE_FACES] = {
     // front
-    Face(1, 2, 3), Face(1, 3, 4),
+    Face(1, 2, 3, 0xFFFF0000), Face(1, 3, 4, 0xFFFF0000),
     // right
-    Face(4, 3, 5), Face(4, 5, 6),
+    Face(4, 3, 5, 0xFF00FF00), Face(4, 5, 6, 0xFF00FF00),
     // back
-    Face(6, 5, 7), Face(6, 7, 8),
+    Face(6, 5, 7, 0xFF0000FF), Face(6, 7, 8, 0xFF0000FF),
     // left
-    Face(8, 7, 2), Face(8, 2, 1),
+    Face(8, 7, 2, 0xFFFFFF00), Face(8, 2, 1, 0xFFFFFF00),
     // top
-    Face(2, 7, 5), Face(2, 5, 3),
+    Face(2, 7, 5, 0xFFFF00FF), Face(2, 5, 3, 0xFFFF00FF),
     // bottom
-    Face(6, 8, 1), Face(6, 1, 4)};
+    Face(6, 8, 1, 0xFF00FFFF), Face(6, 1, 4, 0xFF00FFFF)};
 
 Mesh load_cube_mesh_data(void)
 {

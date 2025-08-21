@@ -32,7 +32,8 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-  mesh = load_obj_file_data("assets/f22.obj");
+  // mesh = load_obj_file_data("assets/f22.obj");
+  mesh = load_cube_mesh_data();
 }
 
 void process_input(void)
@@ -95,8 +96,6 @@ void update(void)
     face_vertices[1] = mesh.vertices[mesh_face.b - 1];
     face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
-    Triangle projected_triangle;
-
     Vec3 transformed_vertices[3];
 
     for (int j = 0; j < 3; j++)
@@ -136,18 +135,25 @@ void update(void)
     }
 
     // performing the projection
+    Vec2 projected_points[3];
     for (int j = 0; j < 3; j++)
     {
-      Vec2 projected_point = project(transformed_vertices[j]);
+      projected_points[j] = project(transformed_vertices[j]);
       // scale and translate the projected vertices to the middle of the screen
-      projected_point.x += WINDOW_WIDTH / 2;
-      projected_point.y += WINDOW_HEIGHT / 2;
-
-      projected_triangle.points[j] = projected_point;
+      projected_points[j].x += WINDOW_WIDTH / 2;
+      projected_points[j].y += WINDOW_HEIGHT / 2;
     }
-    // triangles_to_render[i] = projected_triangle;
+
+    float z_average =
+        (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.0f;
+
+    Triangle projected_triangle(projected_points[0], projected_points[1], projected_points[2],
+                                mesh_face.color);
+    projected_triangle.z_average = z_average;
     triangles_to_render.push_back(projected_triangle);
   }
+  std::sort(triangles_to_render.begin(), triangles_to_render.end(),
+            [](const Triangle &a, const Triangle &b) { return a.z_average > b.z_average; });
 }
 
 void render(void)
@@ -161,7 +167,7 @@ void render(void)
     {
       draw_filled_triangle(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x,
                            triangle.points[1].y, triangle.points[2].x, triangle.points[2].y,
-                           0xFF555555);
+                           triangle.color);
     }
     // draw triangle wireframe
     if (render_method == render_wire || render_method == render_wire_vertex ||

@@ -9,6 +9,18 @@
 #include <stdint.h>
 #include <stdio.h>
 
+enum class Cull_method
+{
+  NONE,
+  BACKFACE,
+};
+
+enum class Render_method
+{
+  FILL,
+  WIREFRAME,
+};
+
 inline constexpr int FPS = 60;
 inline constexpr float FRAME_TARGET_TIME = 1000.0f / FPS;
 inline constexpr int WINDOW_WIDTH = 900;

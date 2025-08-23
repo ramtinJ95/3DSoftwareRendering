@@ -9,6 +9,7 @@
 std::vector<Triangle> triangles_to_render;
 
 const Vec3 camera_position(0, 0, 0);
+Mat4 projection_matrix;
 const int CAMERA_ZOOM = 7;
 
 using enum Render_method;
@@ -34,6 +35,14 @@ void setup(void)
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
   // mesh = load_obj_file_data("assets/f22.obj");
+
+  // Init perspective projection matrix
+  float fov = 3.141592 / 3.0f;
+  float aspect_ratio = (float)WINDOW_HEIGHT / (float)WINDOW_WIDTH;
+  float z_near = 0.1f;
+  float z_far = 100.0f;
+  projection_matrix = mat4_make_perspective(fov, aspect_ratio, z_near, z_far);
+
   mesh = load_cube_mesh_data();
 }
 
@@ -91,7 +100,7 @@ void update(void)
   // mesh.scale.x += 0.002;
   // mesh.scale.y += 0.001;
   //
-  mesh.translation.x += 0.01;
+  // mesh.translation.x += 0.01;
   mesh.translation.z = CAMERA_ZOOM;
 
   Mat4 scale_matrix = mat4_make_scale(mesh.scale.x, mesh.scale.y, mesh.scale.z);
@@ -155,19 +164,25 @@ void update(void)
     }
 
     // performing the projection
-    Vec2 projected_points[3];
+    Vec4 projected_points[3];
     for (int j = 0; j < 3; j++)
     {
-      projected_points[j] = project(vec4_to_vec3(transformed_vertices[j]));
-      // scale and translate the projected vertices to the middle of the screen
-      projected_points[j].x += WINDOW_WIDTH / 2;
-      projected_points[j].y += WINDOW_HEIGHT / 2;
+      projected_points[j] = mat4_mul_vec4_project(projection_matrix, transformed_vertices[j]);
+
+      // scale the points to be within the screen dimensions
+      projected_points[j].x *= WINDOW_WIDTH / 2.0f;
+      projected_points[j].y *= WINDOW_HEIGHT / 2.0f;
+
+      // translate the projected vertices to the middle of the screen
+      projected_points[j].x += WINDOW_WIDTH / 2.0f;
+      projected_points[j].y += WINDOW_HEIGHT / 2.0f;
     }
 
     float z_average =
         (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.0f;
 
-    Triangle projected_triangle(projected_points[0], projected_points[1], projected_points[2],
+    Triangle projected_triangle(projected_points[0].x, projected_points[0].y, projected_points[1].x,
+                                projected_points[1].y, projected_points[2].x, projected_points[2].y,
                                 mesh_face.color);
     projected_triangle.z_average = z_average;
     triangles_to_render.push_back(projected_triangle);

@@ -98,3 +98,27 @@ Mat4 mat4_mul_mat4(const Mat4 &m1, const Mat4 &m2)
 
   return result;
 }
+
+Mat4 mat4_make_perspective(float fov, float aspect, float near, float far)
+{
+  Mat4 matrix;
+  matrix.elements[0][0] = aspect * (1.0f / tanf(fov / 2.0f));
+  matrix.elements[1][1] = 1.0f / tanf(fov / 2.0f);
+  matrix.elements[2][2] = far / (far - near);
+  matrix.elements[2][3] = (-far * near) / (far - near);
+  matrix.elements[3][2] = 1.0f;
+  return matrix;
+}
+
+Vec4 mat4_mul_vec4_project(const Mat4 &m, const Vec4 &v)
+{
+  Vec4 result = mat4_mul_vec4(m, v);
+  if (result.w != 0.0f)
+  {
+    result.x /= result.w;
+    result.y /= result.w;
+    result.z /= result.w;
+    result.w = 1.0f;
+  }
+  return result;
+}

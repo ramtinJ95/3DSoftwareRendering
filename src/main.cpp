@@ -34,7 +34,7 @@ void setup(void)
   // Creating a SDL texture that is used to display the color buffer
   color_buffer_texture = SDL_CreateTexture(
       renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-  // mesh = load_obj_file_data("assets/f22.obj");
+  mesh = load_obj_file_data("assets/f22.obj");
 
   // Init perspective projection matrix
   float fov = 3.141592 / 3.0f;
@@ -43,7 +43,7 @@ void setup(void)
   float z_far = 100.0f;
   projection_matrix = mat4_make_perspective(fov, aspect_ratio, z_near, z_far);
 
-  mesh = load_cube_mesh_data();
+  // mesh = load_cube_mesh_data();
 }
 
 void process_input(void)
@@ -93,9 +93,9 @@ void update(void)
 
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
-  mesh.rotation.z += 0.01;
+  mesh.rotation.x += 0.001;
+  // mesh.rotation.y += 0.01;
+  // mesh.rotation.z += 0.01;
 
   // mesh.scale.x += 0.002;
   // mesh.scale.y += 0.001;
@@ -171,8 +171,8 @@ void update(void)
       projected_points[j] = mat4_mul_vec4_project(projection_matrix, transformed_vertices[j]);
 
       // scale the points to be within the screen dimensions
-      projected_points[j].x *= WINDOW_WIDTH / 2.0f;
-      projected_points[j].y *= WINDOW_HEIGHT / 2.0f;
+      projected_points[j].x *= (WINDOW_WIDTH / 2.0f); // negative to invert
+      projected_points[j].y *= -(WINDOW_HEIGHT / 2.0f);
 
       // translate the projected vertices to the middle of the screen
       projected_points[j].x += WINDOW_WIDTH / 2.0f;

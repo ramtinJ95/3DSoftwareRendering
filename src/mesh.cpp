@@ -70,6 +70,7 @@ Mesh load_obj_file_data(std::string filepath)
     {
       Face f;
       iss >> f.a >> token >> f.b >> token >> f.c;
+      f.color = 0xFFFFFFFF;
       faces.push_back(f);
     }
   }

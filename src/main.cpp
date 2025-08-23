@@ -1,4 +1,5 @@
 #include "display.hpp"
+#include "matrix.hpp"
 #include "mesh.hpp"
 #include "triangle.hpp"
 #include "vector.hpp"
@@ -87,6 +88,10 @@ void update(void)
   mesh.rotation.y += 0.01;
   mesh.rotation.z += 0.01;
 
+  mesh.scale.x += 0.002;
+
+  Mat4 scale_matrix = mat4_make_scale(mesh.scale.x, mesh.scale.y, mesh.scale.z);
+
   for (int i = 0; i < num_faces; i++)
   {
     Face mesh_face = mesh.mesh_faces[i];
@@ -96,15 +101,18 @@ void update(void)
     face_vertices[1] = mesh.vertices[mesh_face.b - 1];
     face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
-    Vec3 transformed_vertices[3];
+    Vec4 transformed_vertices[3];
 
     for (int j = 0; j < 3; j++)
     {
-      Vec3 transformed_vertex = face_vertices[j];
-      transformed_vertex = vec3_rotate_x(&transformed_vertex, mesh.rotation.x);
-      transformed_vertex = vec3_rotate_y(&transformed_vertex, mesh.rotation.y);
-      transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
+      Vec4 transformed_vertex = vec3_to_vec4(face_vertices[j]);
 
+      transformed_vertex = mat4_mul_vec4(scale_matrix, transformed_vertex);
+
+      // transformed_vertex = vec3_rotate_x(&transformed_vertex, mesh.rotation.x);
+      // transformed_vertex = vec3_rotate_y(&transformed_vertex, mesh.rotation.y);
+      // transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
+      //
       // Translate the vertex away from the camera
       transformed_vertex.z += CAMERA_ZOOM;
 
@@ -114,9 +122,9 @@ void update(void)
     if (cull_method == cull_backface)
     {
       // if the face is not visible then we skip it
-      Vec3 vector_a = transformed_vertices[0];
-      Vec3 vector_b = transformed_vertices[1];
-      Vec3 vector_c = transformed_vertices[2];
+      Vec3 vector_a = vec4_to_vec3(transformed_vertices[0]);
+      Vec3 vector_b = vec4_to_vec3(transformed_vertices[1]);
+      Vec3 vector_c = vec4_to_vec3(transformed_vertices[2]);
 
       Vec3 v1 = vec3_sub(vector_b, vector_a);
       Vec3 v2 = vec3_sub(vector_c, vector_a);
@@ -138,7 +146,7 @@ void update(void)
     Vec2 projected_points[3];
     for (int j = 0; j < 3; j++)
     {
-      projected_points[j] = project(transformed_vertices[j]);
+      projected_points[j] = project(vec4_to_vec3(transformed_vertices[j]));
       // scale and translate the projected vertices to the middle of the screen
       projected_points[j].x += WINDOW_WIDTH / 2;
       projected_points[j].y += WINDOW_HEIGHT / 2;

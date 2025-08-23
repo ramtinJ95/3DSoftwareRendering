@@ -23,6 +23,29 @@ struct Vec3
   }
 };
 
+struct Vec4
+{
+  float x, y, z, w;
+  Vec4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+  {
+  }
+  Vec4(float x_, float y_, float z_, float w_) : x(x_), y(y_), z(z_), w(w_)
+  {
+  }
+};
+
+inline Vec4 vec3_to_vec4(const Vec3 &v)
+{
+  Vec4 result(v.x, v.y, v.z, 1.0f);
+  return result;
+}
+
+inline Vec3 vec4_to_vec3(const Vec4 &v)
+{
+  Vec3 result(v.x, v.y, v.z);
+  return result;
+}
+
 inline float vec2_length(const Vec2 &v)
 {
   float x_squared = v.x * v.x;

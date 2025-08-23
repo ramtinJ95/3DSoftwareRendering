@@ -16,28 +16,36 @@ struct Mesh
   std::vector<Vec3> vertices;
   std::vector<Face> mesh_faces;
   Vec3 rotation;
+  Vec3 scale;
+  Vec3 translation;
 
   // Default constructor - rotation defaults to Vec3's default constructor
   Mesh() = default;
 
   // Constructor with rotation parameter (copy version)
   Mesh(const std::vector<Vec3> &vertices, const std::vector<Face> &faces,
-       const Vec3 &rotation = Vec3{0, 0, 0})
-      : vertices(vertices), mesh_faces(faces), rotation(rotation)
+       const Vec3 &rotation = Vec3{0, 0, 0}, const Vec3 &scale = Vec3{1, 1, 1},
+       const Vec3 &translation = Vec3{0, 0, 0})
+      : vertices(vertices), mesh_faces(faces), rotation(rotation), scale(scale),
+        translation(translation)
   {
   }
 
   // Constructor with rotation parameter (move version)
   Mesh(std::vector<Vec3> &&vertices, std::vector<Face> &&faces,
-       const Vec3 &rotation = Vec3{0, 0, 0})
-      : vertices(std::move(vertices)), mesh_faces(std::move(faces)), rotation(rotation)
+       const Vec3 &rotation = Vec3{0, 0, 0}, const Vec3 &scale = Vec3{1, 1, 1},
+       const Vec3 &translation = Vec3{0, 0, 0})
+      : vertices(std::move(vertices)), mesh_faces(std::move(faces)), rotation(rotation),
+        scale(scale), translation(translation)
   {
   }
 
   // Constructor with initializer lists and rotation
   Mesh(std::initializer_list<Vec3> vertices, std::initializer_list<Face> faces,
-       const Vec3 &rotation = Vec3{0, 0, 0})
-      : vertices(vertices), mesh_faces(faces), rotation(rotation)
+       const Vec3 &rotation = Vec3{0, 0, 0}, const Vec3 &scale = Vec3{1, 1, 1},
+       const Vec3 &translation = Vec3{0, 0, 0})
+      : vertices(vertices), mesh_faces(faces), rotation(rotation), scale(scale),
+        translation(translation)
   {
   }
 };

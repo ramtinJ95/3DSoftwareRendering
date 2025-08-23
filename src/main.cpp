@@ -1,4 +1,5 @@
 #include "display.hpp"
+#include "light.hpp"
 #include "matrix.hpp"
 #include "mesh.hpp"
 #include "triangle.hpp"
@@ -25,7 +26,6 @@ int previous_frame_time = 0;
 
 void setup(void)
 {
-
   render_method = render_wire;
   cull_method = cull_backface;
   // Allocate the memory in bytes to hold color buffer
@@ -94,8 +94,8 @@ void update(void)
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
   mesh.rotation.x += 0.01;
-  // mesh.rotation.y += 0.01;
-  // mesh.rotation.z += 0.01;
+  mesh.rotation.y += 0.01;
+  mesh.rotation.z += 0.01;
 
   // mesh.scale.x += 0.002;
   // mesh.scale.y += 0.001;
@@ -140,23 +140,24 @@ void update(void)
       transformed_vertices[j] = transformed_vertex;
     }
     // check back face culling before projecting
+    // if the face is not visible then we skip it
+    Vec3 vector_a = vec4_to_vec3(transformed_vertices[0]);
+    Vec3 vector_b = vec4_to_vec3(transformed_vertices[1]);
+    Vec3 vector_c = vec4_to_vec3(transformed_vertices[2]);
+
+    Vec3 v1 = vec3_sub(vector_b, vector_a);
+    Vec3 v2 = vec3_sub(vector_c, vector_a);
+
+    Vec3 normal = vec3_cross(v1, v2);
+    vec3_normalize(normal);
+    Vec3 camera_ray = vec3_sub(camera_position, vector_a);
+
+    float dot_product = vec3_dot(normal, camera_ray);
+
+    // if dot product is negative then the face is pointing away from the
+    // camera so we bypass the triangle entirely so we can save rendering cycles
     if (cull_method == cull_backface)
     {
-      // if the face is not visible then we skip it
-      Vec3 vector_a = vec4_to_vec3(transformed_vertices[0]);
-      Vec3 vector_b = vec4_to_vec3(transformed_vertices[1]);
-      Vec3 vector_c = vec4_to_vec3(transformed_vertices[2]);
-
-      Vec3 v1 = vec3_sub(vector_b, vector_a);
-      Vec3 v2 = vec3_sub(vector_c, vector_a);
-
-      Vec3 normal = vec3_cross(v1, v2);
-      Vec3 camera_ray = vec3_sub(camera_position, vector_a);
-
-      float dot_product = vec3_dot(normal, camera_ray);
-
-      // if dot product is negative then the face is pointing away from the
-      // camera so we bypass the triangle entirely so we can save rendering cycles
       if (dot_product < 0)
       {
         continue;
@@ -181,9 +182,13 @@ void update(void)
     float z_average =
         (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.0f;
 
+    // calculate triangle color based on light direction
+    float light_intensity_factor = -vec3_dot(normal, light.direction);
+    uint32_t triangle_color = apply_light_intensity(mesh_face.color, light_intensity_factor);
+
     Triangle projected_triangle(projected_points[0].x, projected_points[0].y, projected_points[1].x,
                                 projected_points[1].y, projected_points[2].x, projected_points[2].y,
-                                mesh_face.color);
+                                triangle_color);
     projected_triangle.z_average = z_average;
     triangles_to_render.push_back(projected_triangle);
   }

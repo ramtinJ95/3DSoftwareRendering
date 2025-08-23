@@ -116,12 +116,17 @@ void update(void)
     {
       Vec4 transformed_vertex = vec3_to_vec4(face_vertices[j]);
 
-      // order matters alot here. always do scale -> rotate -> translate
-      transformed_vertex = mat4_mul_vec4(scale_matrix, transformed_vertex);
-      transformed_vertex = mat4_mul_vec4(rotation_x_matrix, transformed_vertex);
-      transformed_vertex = mat4_mul_vec4(rotation_y_matrix, transformed_vertex);
-      transformed_vertex = mat4_mul_vec4(rotation_z_matrix, transformed_vertex);
-      transformed_vertex = mat4_mul_vec4(translation_matrix, transformed_vertex);
+      // create world matrix by multiplying matrices in the correct order
+      Mat4 world_matrix = mat4_identity();
+
+      // multiply all matrices
+      world_matrix = mat4_mul_mat4(scale_matrix, world_matrix);
+      world_matrix = mat4_mul_mat4(rotation_x_matrix, world_matrix);
+      world_matrix = mat4_mul_mat4(rotation_y_matrix, world_matrix);
+      world_matrix = mat4_mul_mat4(rotation_z_matrix, world_matrix);
+      world_matrix = mat4_mul_mat4(translation_matrix, world_matrix);
+      // world times original vector
+      transformed_vertex = mat4_mul_vec4(world_matrix, transformed_vertex);
 
       transformed_vertices[j] = transformed_vertex;
     }

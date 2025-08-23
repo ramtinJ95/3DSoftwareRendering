@@ -16,3 +16,4 @@ Vec4 mat4_mul_vec4(Mat4 m, Vec4 v);
 Mat4 mat4_make_rotation_x(float angle);
 Mat4 mat4_make_rotation_y(float angle);
 Mat4 mat4_make_rotation_z(float angle);
+Mat4 mat4_mul_mat4(const Mat4 &m1, const Mat4 &m2);

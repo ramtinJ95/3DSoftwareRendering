@@ -78,3 +78,23 @@ Mat4 mat4_make_rotation_z(float angle)
   matrix.elements[1][1] = c;
   return matrix;
 }
+
+Mat4 mat4_mul_mat4(const Mat4 &m1, const Mat4 &m2)
+{
+  Mat4 result;
+
+  for (int i = 0; i < 4; i++)
+  {
+    for (int j = 0; j < 4; j++)
+    {
+      float sum = 0.0f;
+      for (int k = 0; k < 4; k++)
+      {
+        sum += m1.elements[i][k] * m2.elements[k][j];
+      }
+      result.elements[i][j] = sum;
+    }
+  }
+
+  return result;
+}

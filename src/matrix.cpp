@@ -23,13 +23,22 @@ Mat4 mat4_make_scale(float sx, float sy, float sz)
 Vec4 mat4_mul_vec4(Mat4 m, Vec4 v)
 {
   Vec4 result;
-  result.x = v.x * m.elements[0][0] + v.y * m.elements[1][0] + v.z * m.elements[2][0] +
-             v.w * m.elements[3][0];
-  result.y = v.x * m.elements[0][1] + v.y * m.elements[1][1] + v.z * m.elements[2][1] +
-             v.w * m.elements[3][1];
-  result.z = v.x * m.elements[0][2] + v.y * m.elements[1][2] + v.z * m.elements[2][2] +
-             v.w * m.elements[3][2];
-  result.w = v.x * m.elements[0][3] + v.y * m.elements[1][3] + v.z * m.elements[2][3] +
-             v.w * m.elements[3][3];
+  result.x = m.elements[0][0] * v.x + m.elements[0][1] * v.y + m.elements[0][2] * v.z +
+             m.elements[0][3] * v.w;
+  result.y = m.elements[1][0] * v.x + m.elements[1][1] * v.y + m.elements[1][2] * v.z +
+             m.elements[1][3] * v.w;
+  result.z = m.elements[2][0] * v.x + m.elements[2][1] * v.y + m.elements[2][2] * v.z +
+             m.elements[2][3] * v.w;
+  result.w = m.elements[3][0] * v.x + m.elements[3][1] * v.y + m.elements[3][2] * v.z +
+             m.elements[3][3] * v.w;
   return result;
+}
+
+Mat4 mat4_make_translation(float tx, float ty, float tz)
+{
+  Mat4 matrix = mat4_identity();
+  matrix.elements[0][3] = tx;
+  matrix.elements[1][3] = ty;
+  matrix.elements[2][3] = tz;
+  return matrix;
 }

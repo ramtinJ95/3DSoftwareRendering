@@ -85,17 +85,21 @@ void update(void)
   previous_frame_time = SDL_GetTicks();
   int num_faces = mesh.mesh_faces.size();
   mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
-  mesh.rotation.z += 0.01;
+  // mesh.rotation.y += 0.01;
+  // mesh.rotation.z += 0.01;
 
-  mesh.scale.x += 0.002;
-  mesh.scale.y += 0.001;
-
+  // mesh.scale.x += 0.002;
+  // mesh.scale.y += 0.001;
+  //
   mesh.translation.x += 0.01;
+  mesh.translation.z = CAMERA_ZOOM;
 
   Mat4 scale_matrix = mat4_make_scale(mesh.scale.x, mesh.scale.y, mesh.scale.z);
   Mat4 translation_matrix =
       mat4_make_translation(mesh.translation.x, mesh.translation.y, mesh.translation.z);
+  Mat4 rotation_x_matrix = mat4_make_rotation_x(mesh.rotation.x);
+  Mat4 rotation_y_matrix = mat4_make_rotation_y(mesh.rotation.y);
+  Mat4 rotation_z_matrix = mat4_make_rotation_z(mesh.rotation.z);
 
   for (int i = 0; i < num_faces; i++)
   {
@@ -112,15 +116,12 @@ void update(void)
     {
       Vec4 transformed_vertex = vec3_to_vec4(face_vertices[j]);
 
+      // order matters alot here. always do scale -> rotate -> translate
       transformed_vertex = mat4_mul_vec4(scale_matrix, transformed_vertex);
+      transformed_vertex = mat4_mul_vec4(rotation_x_matrix, transformed_vertex);
+      transformed_vertex = mat4_mul_vec4(rotation_y_matrix, transformed_vertex);
+      transformed_vertex = mat4_mul_vec4(rotation_z_matrix, transformed_vertex);
       transformed_vertex = mat4_mul_vec4(translation_matrix, transformed_vertex);
-
-      // transformed_vertex = vec3_rotate_x(&transformed_vertex, mesh.rotation.x);
-      // transformed_vertex = vec3_rotate_y(&transformed_vertex, mesh.rotation.y);
-      // transformed_vertex = vec3_rotate_z(&transformed_vertex, mesh.rotation.z);
-      //
-      // Translate the vertex away from the camera
-      transformed_vertex.z += CAMERA_ZOOM;
 
       transformed_vertices[j] = transformed_vertex;
     }

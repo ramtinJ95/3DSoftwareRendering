@@ -42,3 +42,39 @@ Mat4 mat4_make_translation(float tx, float ty, float tz)
   matrix.elements[2][3] = tz;
   return matrix;
 }
+
+Mat4 mat4_make_rotation_x(float angle)
+{
+  Mat4 matrix = mat4_identity();
+  float c = cosf(angle);
+  float s = sinf(angle);
+  matrix.elements[1][1] = c;
+  matrix.elements[1][2] = s;
+  matrix.elements[2][1] = -s;
+  matrix.elements[2][2] = c;
+  return matrix;
+}
+
+Mat4 mat4_make_rotation_y(float angle)
+{
+  Mat4 matrix = mat4_identity();
+  float c = cosf(angle);
+  float s = sinf(angle);
+  matrix.elements[0][0] = c;
+  matrix.elements[0][2] = -s;
+  matrix.elements[2][0] = s;
+  matrix.elements[2][2] = c;
+  return matrix;
+}
+
+Mat4 mat4_make_rotation_z(float angle)
+{
+  Mat4 matrix = mat4_identity();
+  float c = cosf(angle);
+  float s = sinf(angle);
+  matrix.elements[0][0] = c;
+  matrix.elements[0][1] = s;
+  matrix.elements[1][0] = -s;
+  matrix.elements[1][1] = c;
+  return matrix;
+}
